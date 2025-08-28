@@ -6,6 +6,8 @@ import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet"
 import {Menu} from "lucide-react"
 import Link from "next/link"
 
+import Image from "next/image"
+
 
 
 export default function Navbar(){
@@ -35,7 +37,14 @@ export default function Navbar(){
 
             </Sheet>
 
-            <Link href="" className="text-xl text-[var(--primary-text-color)]">Devdeck</Link>
+            <Link href="" className="">
+            <Image src="/logo.png"
+            alt="Logo of the Image"
+            width={0}
+            height = {0}
+            className="p-3"
+            />
+            </Link>
          </div>
 
 
