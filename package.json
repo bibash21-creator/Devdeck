@@ -9,19 +9,25 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.2.3",
+    "add": "^2.0.6",
     "autoprefixer": "^10.4.21",
+    "button": "^1.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "font": "^0.0.4",
     "fonts": "^0.0.2",
+    "input": "^1.0.1",
     "lucide-react": "^0.542.0",
     "next": "^15.5.0",
+    "next-themes": "^0.4.6",
     "postcss": "^8.5.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "shadcn": "^3.0.0",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {

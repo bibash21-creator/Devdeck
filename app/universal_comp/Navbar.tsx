@@ -3,10 +3,23 @@
 import {useState} from "react"
 
 import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet"
-import {Menu, X, Search, User} from "lucide-react"
+import {Menu, X, Search, User, UploadCloud, Upload, Sun, Moon} from "lucide-react"
 import Link from "next/link"
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
+
+import {useTheme} from "next-themes"
+
+import {Button} from "@/components/ui/button"
 
 import {JetBrains_Mono} from "next/font/google"
+
+import {Input} from "@/components/ui/input"
+
+import {useEffect} from 'react'
+
+
+
+
 
 
 export const jetbrains = JetBrains_Mono({
@@ -16,34 +29,81 @@ export const jetbrains = JetBrains_Mono({
    })
 
 
+   export function ThemeToggle(){
+
+}
+
+
 
 
 export default function Navbar(){
-   const [menuOpen, setMenuOpen] = useState(false)
+ 
 
-   
+
+   // Hamburger Menu
+   const [menuOpen, setMenuOpen] = useState(false);
+
+
+   // Search Menu Open
+   const [showInput, setShowInput] = useState(false)
+
+
+   // Profile Image Upload
+   const [profileImage, setProfileImage] = useState<string>('')
+
+   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) =>{
+      const file = e.target.files?.[0]
+      if(file){
+         const reader = new FileReader()
+
+         reader.onloadend = () => {
+            setProfileImage(reader.result as string)
+         }
+         reader.readAsDataURL(file)
+      }
+   }
+
+
+     // For Theme Toggling
+   const {theme, setTheme} = useTheme();
+   const [mounted, setMounted] = useState(false);
+
+      useEffect(()=>{
+      setMounted(true)
+   }, [])
+
+   if (!mounted) return null //Prevent hydration mismatch
+
+
+
+
+
    return (
     <>
     
       <header className="flex items-center justify-between sticky bottom-0">
 
          {/* Mobile design */}
-         <div className="flex items-center md:hidden min-w-full border border-red-500">
+         <div className="flex items-center md:hidden">
+
+            {/* Hamburger Menu Starting */}
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
                <SheetTrigger className="p-1">
-                  {menuOpen? <X className="text-xl" />:
-                  <Menu className="text-xl text-[var(--primary-text-color)]" />}
+                  
+                  <Menu className="text-xl text-[var(--primary-text-color)] dark:text-[var(--secondary-text-color)]" />
                </SheetTrigger>
 
-               <SheetContent side="top" className="w-[20vw]border border-green-500 flex ">
-                  <nav className="flex flex-col gap-4 mt-6">
-                     <Link href="/" className="text-xl text-[var(--primary-text-color)]" >Dashboard</Link>
+               <SheetContent side="right">
+                  <nav className="flex flex-col gap-4 mt-20 mx-5">
+                     <Link href="/" className={`${jetbrains.className}  text-xl text-[var(--primary-text-color)]`} >Dashboard</Link>
 
-                     <Link href="/projects" className="text-xl text-[var(--primary-text-color)]">Projects</Link>
+                     <Link href="/projects" className={`${jetbrains.className}  text-xl text-[var(--primary-text-color)]`} >Projects</Link>
 
-                     <Link href="/settings" className="text-xl text-[var(--primary-text-color)]">Settings</Link>
+                     <Link href="/settings" className={`text-[var(--primary-text-color)] ${jetbrains.className}  text-xl`} >Tasks</Link>
 
-                     <Link href="" className="">Search</Link>
+                     <Link href="/calendar" className={`${jetbrains.className}  text-xl text-[var(--primary-text-color)]`} >Calendar</Link>
+                    
+
 
                     
                   </nav>
@@ -53,23 +113,61 @@ export default function Navbar(){
 
 
             </Sheet>
-
-            <nav className="flex items-center  justify-evenly border border-green-500">
+ <div className="flex items-center  justify-evenly ">
  <Link href="" className={`${jetbrains.className} text-xl p-3 text-[var(--primary-text-color)]`}>
                Devdeck
             </Link>
 
-             <div className={`${jetbrains.className} text-xl p-3 text-[var(--primary-text-color)]`}>
-                    Search
-                  </div>
+            
 
-
-            <div className={ `text-xl ${jetbrains.className} text-[var(--primary-text-color)]`}>
-               Profile
             </div>
+
+            </div>
+            {/* Hamburger menu ends here */}
+
+
+
+            <nav className="flex items-center gap-x-5 mx-5 md:hidden">
+               
+             
+
+             {/* Search Button */}
+             <div className="relative">
+               <button onClick = {()=>setShowInput(prev=> !prev)}
+               className="p-10"
+               aria-label="Toggle Search">
+                  <Search className="h-5 w-5" />
+                  </button>
+
+                  {/* The toggle works here */}
+                  {showInput && (
+                     <div className="absolute">
+                        <Input type="search" placeholder="Search..."
+                        className="text-sm" />
+                     </div>
+                  )  }
+                   </div>
+
+             {/* Profile Avatar with Upload */}
+             <div className="relative w-8 h-8">
+               <Avatar className="w-full h-full text-[var(--secondary-text-color)]">
+                  <AvatarImage src={profileImage} alt="User" />
+                  <AvatarFallback>
+                     <User className="h-10 w-10" />
+                  </AvatarFallback>
+               </Avatar>
+
+               <label className="absolute bottom-0 right-0">
+                  <UploadCloud className = "h-3 w-3 text-[var(--accent-active-color)]"/>
+
+                  <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
+               </label>
+             </div>
+           
             </nav>
            
-         </div>
+
+         
 
 
 
@@ -81,7 +179,7 @@ export default function Navbar(){
 
     {/* Desktop and Large Scale design */}
 
-    <nav className="hidden md:flex min-w-full mt-3">
+    <nav className="hidden md:flex min-w-full mt-3 items-center">
 
       <div className="w-[15%] text-center p-2">
          <Link href="" className={` text-2xl md:text-3xl text-[var(--primary-text-color)] ${jetbrains.className} `}>
@@ -94,12 +192,69 @@ export default function Navbar(){
          </Link>
          </div>   
 
-      <div className="w-[85%]  flex items-center">
-         <Link href="" className="mx-50 border border-green-500">Search</Link></div>   
+      {/* Search button */}
+      <div className="mx-30 lg:mx-90">
+        
+           <div className="flex items-center gap-x-10 border border-[var(--primary-text-color)] py-2 px-3">
+            <Search className="w-ful h-full cursor-pointer"/>
+
+            <input type="text" placeholder="Search..."
+            className="text-[var(--secondary-text-color)] text-sm" />
+
+            
+           </div>
          
+      </div>
+
+      <div className="flex gap-x-20">
+{/* Light and dark Mode goes here  */}
+      <Button
+      variant= "ghost"
+      size="icon"
+      onClick = {()=> setTheme(theme==="dark" ?"light": "dark")}
+      aria-label = "Toggle Theme"
+      className="rounded-full"> 
+         {theme === "dark" ? (
+            <Sun className="h-5 w-5 text-yellow-400" />
+         ) : (
+            <Moon className="h-5 w-5 text-zinc-700" />
+         )}
+         
+
+
+
+
+
+
+      </Button>
+
+
+      {/* User Profile in Here Too */}
+         <div className="relative w-10 h-10">
+            <Avatar className="w-full">
+               <AvatarImage src={profileImage} alt="User" />
+
+               <AvatarFallback>
+                  
+                   <User/>
+                 
+                 
+               </AvatarFallback>
+            </Avatar>
+
+            <label className="absolute bottom-0 right-0">
+               <UploadCloud className="h-3 w-3"/>
+
+               <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
+            </label>
+         </div>
+      </div>
+
+      
+
     </nav>
 
-
+    
        </header>
     </>
 
